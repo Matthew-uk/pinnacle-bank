@@ -6,6 +6,7 @@ import { appwriteConfig } from '../appwrite/config';
 import { parseStringify } from '../utils';
 import { cookies } from 'next/headers';
 import axios from 'axios';
+import { NextResponse } from 'next/server';
 
 const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient();
@@ -34,13 +35,9 @@ export const login = async (email: string, password: string) => {
       httpOnly: true,
       sameSite: 'strict',
     });
-    Cookies.set('appwrite-session', session.secret, {
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    });
-    console.log(cookie);
-
+    Cookies.set('appwrite-session', session.secret);
+    console.log(session, cookie);
+    NextResponse.json(session);
     return { session };
   } catch (error) {
     handleError(error, 'Failed to login user');
