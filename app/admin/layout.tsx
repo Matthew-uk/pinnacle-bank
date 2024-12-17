@@ -5,7 +5,7 @@ import { Header } from '@/components/admin/Header';
 import { useAdminStore, useUserStore } from '@/store/store';
 import { fetchAdminData } from '@/utils/api';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Loader from '@/components/Loader';
 import { listTransactions, listUsers } from '@/lib/actions/admin.actions';
 
@@ -14,25 +14,34 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { loading, setLoading, setName, setEmail, resetUser, setId } =
-    useUserStore();
+  const {
+    setLoading,
+    setName,
+    setEmail,
+    resetUser,
+    setId,
+    loading: userLoading,
+  } = useUserStore();
   const { setAdmins, setTransactions } = useAdminStore();
+  const [isInitialized, setIsInitialized] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
   const initializeUser = async () => {
     setLoading(true);
-    try {
-      const userData = await fetchAdminData();
-      const usersData = await listUsers();
-      const userTransactions = await listTransactions();
 
-      if (userData.documents && userData.documents.length > 0) {
+    try {
+      const [userData, usersData, userTransactions] = await Promise.all([
+        fetchAdminData(),
+        listUsers(),
+        listTransactions(),
+      ]);
+
+      if (userData.documents?.length > 0) {
         const { fullName, email, $id } = userData.documents[0];
         setName(fullName);
         setEmail(email);
         setId($id);
-        console.log({ fullName, email, userId: $id });
       } else {
         console.error('No admin data found.');
         resetUser();
@@ -40,23 +49,42 @@ export default function AdminLayout({
         return;
       }
 
-      // Ensure usersData is valid before setting it
-      setAdmins(usersData || []);
-      setTransactions(userTransactions || []);
+      const adminList =
+        usersData?.map((doc) => ({
+          fullName: doc.fullName || '',
+          email: doc.email || '',
+          transactionsCount: doc.transactionsCount || 0,
+          balance: doc.balance || 0,
+          $id: doc.$id || '',
+        })) || [];
+
+      const transactionsList =
+        userTransactions?.map((transaction) => ({
+          id: transaction.$id,
+          amount: transaction.amount || 0,
+          date: transaction.date || transaction.$createdAt,
+          description: transaction.description || '',
+        })) || [];
+
+      setAdmins(adminList);
+      setTransactions(transactionsList);
     } catch (error) {
-      console.error('Error fetching admin data:', error);
+      console.error('Error initializing user:', error);
       resetUser();
       router.push('/admin/login');
     } finally {
       setLoading(false);
+      setIsInitialized(true);
     }
   };
 
   useEffect(() => {
-    initializeUser();
+    if (!isInitialized) {
+      initializeUser();
+    }
   }, [pathname]);
 
-  if (loading) {
+  if (userLoading || !isInitialized) {
     return <Loader />;
   }
 

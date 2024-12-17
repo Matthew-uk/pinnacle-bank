@@ -24,11 +24,18 @@ export interface AdminData {
   $id: string;
 }
 
+export interface Transaction {
+  id: string;
+  amount: number;
+  date: string;
+  description: string;
+}
+
 type AdminStore = {
   admins: AdminData[];
-  transactions: Object[];
-  setAdmins: (admins: AdminData[]) => void;
-  setTransactions: (admins: AdminData[]) => void;
+  transactions: Transaction[];
+  setAdmins: (admins: AdminData[] | []) => void;
+  setTransactions: (transactions: Transaction[] | []) => void;
 };
 
 export const useAdminStore = create<AdminStore>((set) => ({
