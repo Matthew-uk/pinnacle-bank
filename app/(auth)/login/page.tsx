@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,6 +38,7 @@ const LoginPage = () => {
     try {
       setLoading(true);
       const result = await login(email, password);
+      Cookies.set('appwrite-session', result?.session.secret || '');
       console.log(result);
       router.push('/dashboard');
     } catch (error: any) {
