@@ -1,5 +1,5 @@
 'use server';
-// import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
 import { ID, Query } from 'node-appwrite';
 import { createAdminClient, createSessionClient } from '../appwrite';
 import { appwriteConfig } from '../appwrite/config';
@@ -32,6 +32,11 @@ export const login = async (email: string, password: string) => {
     const cookie = (await cookies()).set('appwrite-session', session.secret, {
       path: '/',
       httpOnly: true,
+      sameSite: 'strict',
+    });
+    Cookies.set('appwrite-session', session.secret, {
+      path: '/',
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
     });
     console.log(cookie);
