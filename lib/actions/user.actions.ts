@@ -30,9 +30,11 @@ export const login = async (email: string, password: string) => {
     const { account } = await createAdminClient();
     const session = await account.createEmailPasswordSession(email, password);
     // Set the session cookie
+    const secureCookie = process.env.NODE_ENV === 'production';
     const cookie = (await cookies()).set('appwrite-session', session.secret, {
       path: '/',
       httpOnly: true,
+      secure: secureCookie,
       sameSite: 'strict',
     });
     Cookies.set('appwrite-session', session.secret);
