@@ -10,11 +10,13 @@ import {
   Shield,
   ArrowRight,
   MessageSquare,
+  User,
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function BankingTabs() {
   return (
@@ -213,9 +215,12 @@ export default function BankingTabs() {
         </div>
       </Tabs>
 
-      <Button className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-amber-200 text-black hover:bg-amber-300 transition-colors duration-200 shadow-lg">
-        <MessageSquare className="mr-2 h-4 w-4" /> CHAT ONLINE
-      </Button>
+      <Link
+        href="mailto:customercarepinnacle@gmail.com"
+        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-amber-200 text-black hover:bg-amber-300 transition-colors duration-200 shadow-lg z-10 flex items-center p-3 rounded"
+      >
+        <User className="mr-2 h-6 w-6" size={20} /> Contact Customer Service
+      </Link>
     </div>
   );
 }
