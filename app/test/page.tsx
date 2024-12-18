@@ -1481,7 +1481,7 @@ const Test = () => {
                                     Maximize Your Benefits with a Health Savings
                                     Account
                                   </h1>
-                                  <div className="full-width-hero__description !font-montserrat">
+                                  <div className="full-width-hero__description !font-montserrat md:text-[28px] !text-[20px]">
                                     If you are enrolled in a High Deductible
                                     Health Plan for 2025, you can save for
                                     future medical expenses with tax free
