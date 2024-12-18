@@ -215,12 +215,12 @@ export default function BankingTabs() {
         </div>
       </Tabs>
 
-      <Link
+      <a
         href="mailto:customercarepinnacle@gmail.com"
         className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-amber-200 text-black hover:bg-amber-300 transition-colors duration-200 shadow-lg z-10 flex items-center p-3 rounded"
       >
         <User className="mr-2 h-6 w-6" size={20} /> Contact Customer Service
-      </Link>
+      </a>
     </div>
   );
 }
