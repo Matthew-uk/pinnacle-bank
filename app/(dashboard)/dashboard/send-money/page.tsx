@@ -42,10 +42,12 @@ const formSchema = z.object({
     .string()
     .min(2, { message: 'Bank name must be at least 2 characters.' }),
   accountNumber: z
-    .string()
-    .min(10, { message: 'Account number must be at least 10 characters.' }),
+    .number({ invalid_type_error: 'Account number must be a number' })
+    .min(10, { message: 'Account number must be at least 10 characters.' })
+    .positive({ message: 'Account Number not valid' })
+    .transform((val) => Number(val)),
   amount: z
-    .number()
+    .number({ invalid_type_error: 'Amount must be a number' })
     .positive({ message: 'Amount must be a positive number.' })
     .transform((val) => Number(val)),
   description: z.string().optional(),
@@ -145,8 +147,8 @@ export default function SendMoneyPage() {
                 <div className="space-y-2">
                   <Label htmlFor="accountName">Account Number</Label>
                   <Input
-                    id="accountName"
-                    {...register('accountNumber')}
+                    id="accountNumber"
+                    {...register('accountNumber', { valueAsNumber: true })}
                     className="w-full"
                   />
                   {errors.accountNumber && (
