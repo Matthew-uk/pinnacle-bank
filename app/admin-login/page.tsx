@@ -15,6 +15,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { loginAdmin } from '@/lib/actions/admin.actions';
+import { toast } from 'react-toastify';
 
 interface LoginFormInputs {
   email: string;
@@ -38,7 +39,9 @@ const LoginPage = () => {
       const result = await loginAdmin(email, password);
       console.log(result);
       router.push('/admin');
+      toast.success('Logged in successfully');
     } catch (error: any) {
+      toast.error(error.message || 'Error Loggin in');
       setError(error.message || 'Error Logging in');
     } finally {
       setLoading(false);
