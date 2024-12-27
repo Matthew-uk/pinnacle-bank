@@ -49,7 +49,7 @@ export default function RootLayout({
       >
         <ToastContainer
           className={'!font-montserrat'}
-          toastClassName={'font-montserrat font-medium'}
+          toastClassName={'!font-montserrat font-medium'}
           position="top-center"
         />
         <NextTopLoader

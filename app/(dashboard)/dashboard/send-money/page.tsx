@@ -227,9 +227,9 @@ export default function SendMoneyPage() {
             <div className="py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="font-semibold">Account Name:</div>
-                <div>{formData.accountName}</div>
+                <div className="tracking-wide">{formData.accountName}</div>
                 <div className="font-semibold">Account Number:</div>
-                <div>{formData.accountNumber}</div>
+                <div className="tracking-widest">{formData.accountNumber}</div>
                 <div className="font-semibold">Bank Name:</div>
                 <div>{formData.bankName}</div>
                 <div className="font-semibold">Amount:</div>
