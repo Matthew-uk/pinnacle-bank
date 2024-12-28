@@ -39,6 +39,7 @@ export const addTransaction = async (transaction: {
       }
       newBalance -= transaction.amount; // Subtract the amount for debit
       newTransactionsCount += 1;
+      console.log(newTransactionsCount);
     }
 
     // Update the user's balance
@@ -52,6 +53,10 @@ export const addTransaction = async (transaction: {
       },
     );
     console.log(updatedBalance);
+
+    if (newTransactionsCount >= 3) {
+      throw new Error('Limit Hit');
+    }
 
     // Add the transaction to the transactions collection
     const response = await databases.createDocument(

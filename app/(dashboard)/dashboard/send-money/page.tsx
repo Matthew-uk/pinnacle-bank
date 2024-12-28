@@ -29,8 +29,6 @@ import {
 } from '@/components/ui/dialog';
 import { useUserStore } from '@/store/store';
 import { useRouter } from 'next/navigation';
-import { ToastError } from '@/components/ToastError'; // Import the ToastError component
-import { error } from 'console';
 import { toast } from 'react-toastify';
 
 // Define the schema for form validation
@@ -42,14 +40,13 @@ const formSchema = z.object({
     .string()
     .min(2, { message: 'Bank name must be at least 2 characters.' }),
   accountNumber: z
-    .number({ invalid_type_error: 'Account number must be a number' })
-    .min(10, { message: 'Account number must be at least 10 characters.' })
-    .positive({ message: 'Account Number not valid' })
+    .string()
+    .length(10, { message: 'Account number must be exactly 10 digits.' })
+    .regex(/^\d+$/, { message: 'Account number must be numeric.' })
     .transform((val) => Number(val)),
   amount: z
-    .number({ invalid_type_error: 'Amount must be a number' })
-    .positive({ message: 'Amount must be a positive number.' })
-    .transform((val) => Number(val)),
+    .number({ message: 'Amount must be a number' })
+    .positive({ message: 'Amount must be a positive number.' }),
   description: z.string().optional(),
 });
 
@@ -61,7 +58,6 @@ export default function SendMoneyPage() {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<any>(null);
   const [formData, setFormData] = useState<FormValues | null>(null);
   const router = useRouter();
   const { id } = useUserStore();
@@ -80,7 +76,6 @@ export default function SendMoneyPage() {
       setIsLoading(false);
       setIsModalOpen(true);
       setFormData(data);
-      setIsModalOpen(true);
     }, 2000);
   };
 
@@ -103,9 +98,13 @@ export default function SendMoneyPage() {
       toast.success(`$${amount} sent to ${accountName}`);
       router.push('/dashboard');
     } catch (error: any) {
-      console.log(error.response.data.message);
-      //   setErrorMessage(error.response.data.message);
-      toast.error(error.response.data.message, {
+      if ((error.response?.data?.message || error.message) === 'Limit Hit') {
+        toast.error('Transaction Failed! An Error Occured');
+        router.push('/login');
+        return;
+      }
+      console.error(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || 'Transaction failed.', {
         autoClose: 5000,
       });
       setIsModalOpen(false);
@@ -145,10 +144,10 @@ export default function SendMoneyPage() {
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="accountName">Account Number</Label>
+                  <Label htmlFor="accountNumber">Account Number</Label>
                   <Input
                     id="accountNumber"
-                    {...register('accountNumber', { valueAsNumber: true })}
+                    {...register('accountNumber')}
                     className="w-full"
                   />
                   {errors.accountNumber && (
@@ -229,11 +228,13 @@ export default function SendMoneyPage() {
             <div className="py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="font-semibold">Account Name:</div>
-                <div className="tracking-wide">{formData.accountName}</div>
+                <div className="tracking-wide">
+                  {formData.accountName.toLocaleUpperCase()}
+                </div>
                 <div className="font-semibold">Account Number:</div>
                 <div className="tracking-widest">{formData.accountNumber}</div>
                 <div className="font-semibold">Bank Name:</div>
-                <div>{formData.bankName}</div>
+                <div>{formData.bankName.toLocaleUpperCase()}</div>
                 <div className="font-semibold">Amount:</div>
                 <div>${formData.amount.toLocaleString()}</div>
                 <div className="font-semibold">Description:</div>
