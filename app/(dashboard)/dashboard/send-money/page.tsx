@@ -41,7 +41,8 @@ const formSchema = z.object({
     .min(2, { message: 'Bank name must be at least 2 characters.' }),
   accountNumber: z
     .string()
-    .length(10, { message: 'Account number must be exactly 10 digits.' })
+    .min(8, { message: 'Account number must be between 8 to 12 digits.' })
+    .max(12, { message: 'Account number must be exactly 8 to 12 digits.' })
     .regex(/^\d+$/, { message: 'Account number must be numeric.' })
     .transform((val) => Number(val)),
   amount: z
