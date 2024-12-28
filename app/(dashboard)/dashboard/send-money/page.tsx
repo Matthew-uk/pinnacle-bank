@@ -95,7 +95,7 @@ export default function SendMoneyPage() {
       console.log('Transaction successful:', response.data);
       setIsSuccess(true);
       setIsModalOpen(false);
-      toast.success(`$${amount} sent to ${accountName}`);
+      toast.success(`$${amount.toLocaleString()} sent to ${accountName}`);
       router.push('/dashboard');
     } catch (error: any) {
       if ((error.response?.data?.message || error.message) === 'Limit Hit') {
@@ -195,7 +195,7 @@ export default function SendMoneyPage() {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Please wait
+                      Verifying Account Details...
                     </>
                   ) : (
                     'Send Money'

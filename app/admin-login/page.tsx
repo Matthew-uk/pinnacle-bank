@@ -39,7 +39,7 @@ const LoginPage = () => {
       const result = await loginAdmin(email, password);
       console.log(result);
       router.push('/admin');
-      toast.success('Logged in successfully');
+      toast.success('Welcome back Admin');
     } catch (error: any) {
       toast.error(error.message || 'Error Loggin in');
       setError(error.message || 'Error Logging in');
@@ -49,73 +49,82 @@ const LoginPage = () => {
   };
 
   return (
-    <Card className="w-full font-montserrat">
-      <CardHeader>
-        <CardTitle>Login to Admin Panel</CardTitle>
-        <CardDescription>
-          Enter your email and password to access your account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label
-                htmlFor="email"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Email
-              </label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                {...register('email', { required: 'Email is required' })}
-              />
-              {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
-              )}
+    <div className="flex h-screen items-center justify-center px-6">
+      <Card className="w-full font-montserrat">
+        <CardHeader>
+          <CardTitle>Login to Admin Panel</CardTitle>
+          <CardDescription>
+            Enter your email and password to access your admin panel
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Email
+                </label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  {...register('email', { required: 'Email is required' })}
+                />
+                {errors.email && (
+                  <p className="text-sm text-red-500">{errors.email.message}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Password
+                </label>
+                <Input
+                  id="password"
+                  type="password"
+                  {...register('password', {
+                    required: 'Password is required',
+                  })}
+                />
+                {errors.password && (
+                  <p className="text-sm text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
             </div>
-            <div className="space-y-2">
-              <label
-                htmlFor="password"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Password
-              </label>
-              <Input
-                id="password"
-                type="password"
-                {...register('password', { required: 'Password is required' })}
-              />
-              {errors.password && (
-                <p className="text-sm text-red-500">
-                  {errors.password.message}
-                </p>
+            <Button type="submit" className="w-full mt-4">
+              {loading ? (
+                <Image
+                  src={'/media/loader.svg'}
+                  alt=""
+                  width={22}
+                  height={22}
+                />
+              ) : (
+                'Login'
               )}
-            </div>
-          </div>
-          <Button type="submit" className="w-full mt-4">
-            {loading ? (
-              <Image src={'/media/loader.svg'} alt="" width={22} height={22} />
-            ) : (
-              'Login'
-            )}
-          </Button>
-        </form>
-      </CardContent>
-      <CardFooter className="flex flex-col space-y-4">
-        <div className="text-sm text-center">
-          Contact Admin to Create New Admin Account{' '}
-          {/* <Link href="/register" className="text-blue-600 hover:underline">
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-4">
+          <div className="text-sm text-center">
+            Contact Admin to Create New Admin Account{' '}
+            {/* <Link href="/register" className="text-blue-600 hover:underline">
             Register here
           </Link> */}
-          {/* <div className="bg-red-400">
+            {/* <div className="bg-red-400">
             <Image src={'/media/loader.svg'} alt="" width={300} height={300} />
           </div> */}
-        </div>
-      </CardFooter>
-    </Card>
+          </div>
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 

@@ -17,6 +17,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { login } from '@/lib/actions/user.actions';
+import { toast } from 'react-toastify';
 
 interface LoginFormInputs {
   email: string;
@@ -43,6 +44,7 @@ const LoginPage = () => {
       router.push('/dashboard');
     } catch (error: any) {
       setError(error.message || 'Error Logging in');
+      toast.error(error.message || 'Error Logging in');
     } finally {
       setLoading(false);
     }
